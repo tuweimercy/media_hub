@@ -22,7 +22,8 @@ from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('accounts/', include('accounts.urls'))
+    path('accounts/', include('accounts.urls')),
+    path('', include('media_assets.urls')),
 ]
 ##set up specific url path for loading assets i.e images uploaded
 ## that are not on cloudinary
