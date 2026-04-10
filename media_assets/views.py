@@ -22,7 +22,7 @@ def dashboard_view(request):
     query= request.GET.get('q')
     if query:
         media_list=media_list.filter(
-            Q(title__icontains=query)/
+            Q(title__icontains=query)|
             Q(description__icontains=query)
         )
         Paginator=Paginator(media_list,12)
