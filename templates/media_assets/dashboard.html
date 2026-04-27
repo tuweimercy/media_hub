@@ -13,7 +13,7 @@ mb-3">
             Search
         </button>
       </form>
-    <p>THIS IS THE MEDIAHUB DASHBOARD</p>
+    
 </div>
 <!-- a user is not searching they want content or they have searched and want to see the content -->
 {% if media_assets %}
@@ -29,7 +29,7 @@ mb-3">
     <img src="{{media.media_file.url}}" class="card-img-top"
     alt="{{media.title}}"/> 
 
-                         {% elif media.category =='video'%}
+                         {% elif media.category == 'video'%}
     <div class="ratio ratio-16x9">
         <video controls scr="{{media.media_file.url}}"></video>
 
@@ -45,7 +45,7 @@ mb-3">
             <p class="card-text small text-muted mb-2">{{media.description| truncatechars:80}}</p>
             <div class="mt-auto d-flex justify-content-between
             align-items-center">
-            <a href="{% 'media_assets:media_detail' media.pk%}"
+            <a href="{% url 'media_assets:media_detail' media.pk%}"
             class="btn btn-sm btn-primary">
             Open Media
             </a>
@@ -63,10 +63,10 @@ mb-3">
          <nav aria-label="Page Navigation">
             <ul class="pagination">
                 <!-- check if media assets fetched are more than 12 page one -->
-      {% if media_assets.has_previous%} 
+      {% if media_assets.has_previous %} 
 <li class="page-item"><a class="page-link" 
 href="?page={{media_assets.previous_page_number}}
-{% if query %}&q={{query}}{{% endif %}}">Previous</a></li>
+{% if query %}&q={{query}}{% endif %}">Previous</a></li>
       {% else %}
 <li class="page-item disabled"><span>Previous</span></li>
       {% endif %}
@@ -77,7 +77,7 @@ Page {{media_assets.number}} of {{media_assets.paginator.num_pages}}
       {% if media_assets.has_next%} 
 <li class="page-item"><a class="page-link" 
 href="?page={{media_assets.next_page_number}}
-{% if query %}&q={{query}}{{% endif %}}">next</a></li>
+{% if query %}&q={{query}}{% endif %}">next</a></li>
       {% else %}
 <li class="page-item disabled"><span>Next</span></li>
       {% endif %}  

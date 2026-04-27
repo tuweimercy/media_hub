@@ -15,7 +15,7 @@ from .forms import MediaAssetsForm
 def dashboard_view(request):
     '''main dashboard:show all public media assets'''
     #capture all assets from media assets db table that are public
-    media_list=MediaAssets.object.filter(is_public=True)
+    media_list=MediaAssets.objects.filter(is_public=True)
     #get data from a form using the name attribute
     #this power a search functionality for my users to be able to
     #filter the media assets
@@ -25,20 +25,20 @@ def dashboard_view(request):
             Q(title__icontains=query)|
             Q(description__icontains=query)
         )
-        Paginator=Paginator(media_list,12)
-        page_number=request.GET.get('page')
-        media_asets=Paginator.get_page(page_number)
+    paginator=Paginator(media_list,12)
+    page_number=request.GET.get('page')
+    media_assets=paginator.get_page(page_number)
         
     return render(request,'media_assets/dashboard.html',
     {
-        'media_assets':media_asets,
+        'media_assets':media_assets,
         'query': query
     })
 ##view to showcase only media files belonging to the logged in user
 @login_required
 def my_media_view(request):
     '''user own media assets'''
-    media_list =MediaAssets.object.filter(uploaded_by=request.user)
+    media_list =MediaAssets.objects.filter(uploaded_by=request.user)
     #pagination
     Paginator=Paginator(media_list,12)
     page_number=request.GET.get('page')
@@ -52,12 +52,13 @@ def my_media_view(request):
 def upload_view(request):
     if request.method == "POST":
         form=MediaAssetsForm(request.POST,request.FILES)
-        if form.valid():
+        if form.is_valid():
             media= form.save(commit=False)#delay post
             media.uploaded_by = request.user#tagging user to post
             media.save()
             messages.success(request,'Media Uploaded Succefully!')
-            return redirect('media_assets::my_media')
+            #return redirect('media_assets:my_media')
+            return redirect('media_assets:dashboard')
     else:
         form=MediaAssetsForm()
     return render(request,'media_assets/upload_media.html',{
@@ -123,5 +124,5 @@ def delete_media_view(request,pk):
         messages.success(request,"Deleted Successfully")
         return redirect('media_assets:my_media')
     return render(request,'media_assets:delete_media.html',{
-        'media':media
+        'media': media
     })
