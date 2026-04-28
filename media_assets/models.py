@@ -22,3 +22,16 @@ class MediaAssets(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
     is_public = models.BooleanField(default=True)
     views_count = models.IntegerField(default=0)
+
+    # always display media in order of creation
+    class Meta:
+        ordering=['-created_at']
+    def can_edit(self,user):
+        '''check if user has editing rights'''
+        return user== self.uploaded_by or user.is_teacher() or user.is_superuser
+    def can_delete(self,user):
+        '''check if user can delete'''
+        return user== self.uploaded_by or user.is_teacher() or user.is_superuser
+    # return the object name i.e media asset
+    def __str__(self):
+        return self.title

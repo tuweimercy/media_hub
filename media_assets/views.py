@@ -40,9 +40,9 @@ def my_media_view(request):
     '''user own media assets'''
     media_list =MediaAssets.objects.filter(uploaded_by=request.user)
     #pagination
-    Paginator=Paginator(media_list,12)
+    paginator=Paginator(media_list,12)
     page_number=request.GET.get('page')
-    media_assets =Paginator.get_page(page_number)
+    media_assets =paginator.get_page(page_number)
     return render(request,'media_assets/my_media.html',{
         'media_assets':media_assets
     })
@@ -77,7 +77,7 @@ def media_detail_view(request,pk):
     # i.e if object exists tag it if not showcase a 404 page.
     media= get_object_or_404(MediaAssets,pk=pk) 
     #app specification #tag on whether media is private or not
-    if not media.is_public and media_uploaded_by !=request.user and not request.user.is_teacher() and not request.is_superuser:
+    if not media.is_public and media.uploaded_by !=request.user and not request.user.is_teacher() and not request.is_superuser:
         messages.error(request,"This media is private!!")
         return redirect('media_assets:dashboard')
     ## if user is a teacher ,superuser or the media is public
@@ -103,7 +103,7 @@ def edit_media_view(request,pk):
     if request.method == 'POST':
         form = MediaAssetsForm(request.POST,request.FILES,
         instance=media)
-        if form.valid():
+        if form.is_valid():
             form.save()
             messages.success(request,"Media Asset Updated")
             return redirect("media_assets:media_detail",pk=pk)
@@ -116,13 +116,14 @@ def edit_media_view(request,pk):
 @login_required
 def delete_media_view(request,pk):
     '''delete media assets based off pk'''
+    media= get_object_or_404(MediaAssets,pk=pk)
     if not media.can_delete(request.user):
         messages.error(request,"You cannot delete media")
         return redirect('media_assets:dashboard')
-    if request.method == 'PPOST':
+    if request.method == 'POST':
         media.delete()#delete from db
         messages.success(request,"Deleted Successfully")
         return redirect('media_assets:my_media')
-    return render(request,'media_assets:delete_media.html',{
+    return render(request,'media_assets/delete_media.html',{
         'media': media
     })
