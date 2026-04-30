@@ -12,3 +12,15 @@ git remote add origin
 5. ensure you a password token to allow push
 6. push using token via this comand git push origin master
 where master is referencing the default branch where work will be saved
+### incase the push doesnt work based off permissions
+-git auth logout
+-git auth login
+ - require your personal token
+after login proceed to do push
+## to get project on a new device
+- select project saving location - open terminal
+- git clone linkto repo
+## to update project repo
+- git add .
+- git commit -m ""
+- git push -u origin master/main
