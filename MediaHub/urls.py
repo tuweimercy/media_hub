@@ -24,6 +24,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('accounts.urls')),
     path('', include('media_assets.urls')),
+    path('mediampesa/', include('mediampesa.urls')),
 ]
 ##set up specific url path for loading assets i.e images uploaded
 ## that are not on cloudinary
